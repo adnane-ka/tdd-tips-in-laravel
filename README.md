@@ -1,4 +1,6 @@
+### Test Driven Developement in Laravel Using PHPunit , Tricks & Tips
 
+---
 #### Table of contents : 
 * Overview
 * Proccess
@@ -16,10 +18,12 @@
     * 9. Mock what you can’t control
     * 10. Use this instead of digging deeper in code 
 
+---
 ## Overview 
 
 When creating an application or new functionality, tests can be written in parallel during the development proccess or only at the very end. But when it comes to TDD, Test Driven Developement, the opposite becomes true. First, we write a test for a non-existent functionality, and then we write a code that will make our test pass.
 
+---
 ## Proccess 
 Here's what the TDD cycle looks like at a glance:
 
@@ -27,7 +31,7 @@ Here's what the TDD cycle looks like at a glance:
 2. We run the test, which of course ends up with an error. Based on the generated error, we create the minimum code that allows us to pass the test successfly.
 3. After passing the test, we develop our code and run the tests again.
 
-
+---
 ## Why TDD ?
 if you're not very familiar with that term here's some advantages that you will be having whenever you're doing TDD : 
 
@@ -37,9 +41,11 @@ if you're not very familiar with that term here's some advantages that you will 
 4. TDD inspires confidence when writing code
 5. Bugs are easier to spot and fix in an environment where tests are written.
 
+---
 ## Important Note 
 In This repo we're not going to talk about how to do TDD in Laravel with phpunit . but instead , we're going to list a curated tips & tricks to do it in a better way ! 
 
+---
 ## Guidline
 
 #### a. Use sqlite as a Database Connection . 
@@ -174,9 +180,19 @@ This testing trait is generally more efficient than migrating down and up, becau
 use RefreshDatabase;
 ```
 
-#### i. Mock what you can’t control :
+#### i. Mock what you can’t control .
 You should never, ever be making calls to external APIs in your test suite, because you can’t control whether those external API’s work - if a third-party API goes down, you may get a failed test run even if your application is working perfectly, not to mention it will add the time taken to send the request and receive a response to the test time. Instead, mock the calls to the third-party API.
 
-#### j. Use $this->withoutExceptionHandling() to debug :
+#### j. Use this instead of digging deeper in code  .
 ```php $this->withoutExceptionHandling()``` tells PHPUnit not to handle exceptions that we may get. This is to disable Laravel’s exception handling to prevent Laravel from handling exceptions that occur instead of throwing it, we do this so we can get a more detailed error reporting in our test output.
+
+```php 
+public function a_test_that_went_wrong()
+{
+    $this->withoutExceptionHandling();
+
+
+    // some testing code 
+}
+```
 
