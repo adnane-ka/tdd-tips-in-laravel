@@ -5,27 +5,73 @@ Here's what the TDD cycle looks like at a glance:
 2. We run the test, which of course ends with an error. Based on the generated error, we create the minimum code that allows you to pass the test.
 3. After passing the test, we develop our code and run the tests again.
 
-so here is a guidline to better do TDD with Laravel : 
-### 1. configure & prepare the configuration file as Bellow : 
-```php 
+In This repo we're not going to talk about how to do TDD in Laravel with phpunit . but instead , we're going to list a curated tips & tricks to do it better . 
+
+#### 1. Use sqlite as a Database Connection . 
+as it's not highly recommended to use the same Database that your application is using as a Default database connection .
+```php
+# phpunit.xml :  
 <env name="DB_CONNECTION" value="sqlite"/>
 <env name="DB_DATABASE" value=":memory:"/>
 <env name="API_DEBUG" value="false"/>
+```
+#### 2. Set a Memory Limit . 
+```php 
+# phpunit.xml : 
 <ini name="memory_limit" value="512M" />
 ```
 
-### 2.Make sure your base TestCase if prep for it:
-- You need to add the DatabaseMigrations trait, so in every run of the test, the migration files are also being run. You may also notice that we have the setUp() and tearDown() methods that are needed to complete that cycle of the application during the test.
-
-### 3.Create An Actual Test : 
-- you can use the artisan command ```php artisan make:test TestName``` to create new Feature tests in laravel .
-
-- I like to follow the ResourceThing Naming convention like : ItemTest , PackageTest ,ProductTest and so on .. 
-
-- A Test in PHPUNIT is known only if you put ```/** @test */``` annotation on the docblock or ```test_``` as a prefix. examples : 
+#### 3.use the DatabaseMigrations trait:
+so in every run of the test, the migration files are also being run. You may also notice that we have the setUp() and tearDown() methods that are needed to complete that cycle of the application during the test.
 
 ```php 
+namespace Tests;
 
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Faker\Factory as Faker;
+
+/**
+ * Class TestCase
+ * @package Tests
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
+abstract class TestCase extends BaseTestCase
+{
+    use CreatesApplication, DatabaseMigrations, DatabaseTransactions;
+
+    protected $faker;
+
+    /**
+     * Set up the test
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->faker = Faker::create();
+    }
+
+    /**
+     * Reset the migrations
+     */
+    public function tearDown()
+    {
+        $this->artisan('migrate:reset');
+        parent::tearDown();
+    }
+}
+```
+
+#### 4.Properly name your Tests : 
+- I like to follow the ResourceThing naming convention like : ItemTest , PackageTest ,ProductTest and so on .. That's not a rule or an obligation of course , but it's highly recommended that you unify the way you name things .
+
+- Please notice that a test in PHPUNIT is known only if you put ```/** @test */``` annotation on the docblock or ```test_``` as a prefix. 
+
+- It's So much better if The methods Contained in the test had significant and clear names like : (a_product_price_is_required , teachers_list_can_be_retrieved .. ect) , and not like (validate , index) .. 
+
+```php 
 namespace Tests\Feature;
 
 class ProductTest extends TestCase
@@ -58,41 +104,13 @@ class ProductTest extends TestCase
     }
 }
 ```
-
-### 4. Use The Appropriate assertions & expectations :
+#### 5. Use The Appropriate assertions & expectations :
 For Example , in our previous example . We excpect the code to work following a certain procces . 
 
 so the code behaviour will be much understandable if the application gave us a status of 200 after receiving the sent data. as we may assert that a new row was inserted in DB using ```assertCount```. 
 
-### 5. Start Testing ! 
-At That point , you can start the TDD proccess . as you can run the command : 
-```
-phpunit.xml
-```
+#### 6. Create tests for each validation rule .
 
-or 
-
-```
-vendor/bin/phpunit.xml
-```
-
-you may start noticing some failures like: 
-
-```
-was expecting 200 but received 404 
-```
-
-and That's because you have not define any routes or controllers.
-After You create them an error may start appearing : 
-
-```
-was expecting 200 but received 500 
-```
-as this means you need to debug your controller and so on ..
-
-Notice That Now you're driven by the Tests results to develop and write functionnality . you wrote a test for non-existent functionality, and then you wrote a code that will make your test pass. And that's the point when it comes to TDD ! 
-
-This may sound silly at some point , but at a deeper level it learns you how to understand the client's needs & understand a better Use Cases for your software 
 
 
 
