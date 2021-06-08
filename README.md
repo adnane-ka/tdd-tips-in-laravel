@@ -184,7 +184,7 @@ use RefreshDatabase;
 You should never, ever be making calls to external APIs in your test suite, because you can’t control whether those external API’s work - if a third-party API goes down, you may get a failed test run even if your application is working perfectly, not to mention it will add the time taken to send the request and receive a response to the test time. Instead, mock the calls to the third-party API.
 
 #### j. Use this instead of digging deeper in code  .
-```php $this->withoutExceptionHandling()``` tells PHPUnit not to handle exceptions that we may get. This is to disable Laravel’s exception handling to prevent Laravel from handling exceptions that occur instead of throwing it, we do this so we can get a more detailed error reporting in our test output.
+``` $this->withoutExceptionHandling() ``` tells PHPUnit not to handle exceptions that we may get. This is to disable Laravel’s exception handling to prevent Laravel from handling exceptions that occur instead of throwing it, we do this so we can get a more detailed error reporting in our test output.
 
 ```php 
 public function a_test_that_went_wrong()
