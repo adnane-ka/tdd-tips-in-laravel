@@ -7,6 +7,7 @@ Here's what the TDD cycle looks like at a glance:
 
 In This repo we're not going to talk about how to do TDD in Laravel with phpunit . but instead , we're going to list a curated tips & tricks to do it better . 
 
+---
 #### Table of contents : 
 * 1. Use sqlite as a Database Connection .
 * 2. Set a Memory Limit.
@@ -15,6 +16,7 @@ In This repo we're not going to talk about how to do TDD in Laravel with phpunit
 * 5. Use The Appropriate assertions & expectations
 * 6. Create tests for each validation rule
 
+---
 #### 1. Use sqlite as a Database Connection . 
 as it's not highly recommended to use the same Database that your application is using as a Default database connection .
 ```php
