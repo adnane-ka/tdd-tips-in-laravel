@@ -22,6 +22,7 @@
 ## Overview 
 
 When creating an application or new functionality, tests can be written in parallel during the development proccess or only at the very end. But when it comes to TDD, Test Driven Developement, the opposite becomes true. First, we write a test for a non-existent functionality, and then we write a code that will make our test pass.
+notice that each functionality was a result of a test , and each test represents a single expected use case . so the more you understood your client's needs the more you wrote a useful test . so you won't be worrying about why you have added some unuseful features ..
 
 ---
 ## Proccess 
